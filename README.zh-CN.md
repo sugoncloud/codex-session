@@ -88,40 +88,11 @@ make build VERSION=0.1.8
 
 ## Tag 自动发布
 
-推送 `v0.1.8` 这样的版本 tag 时，GitHub Actions 会先执行格式检查、测试及 `go vet`，随后使用 Go 1.26.x 和 GoReleaser 2.19.0 自动创建 GitHub Release。
-
-发布包含以下 6 种二进制包：
-
-| 系统 | 架构 | 格式 |
-| --- | --- | --- |
-| Linux | amd64、arm64 | tar.gz |
-| macOS（darwin） | amd64、arm64 | tar.gz |
-| Windows | amd64、arm64 | zip |
-
-每个压缩包包含程序和中英文 README；Release 另外包含 `checksums.txt`（SHA-256）及基于 Git 历史生成的更新记录。程序版本号从 tag 注入，例如 `v0.1.8` 对应 `codex-sess 0.1.8`。`v0.2.0-rc.1` 这类 tag 会创建预发布版本。
-
-先提交并推送项目及工作流，再执行：
+推送版本 tag 会触发 `.github/workflows/release.yml`：
 
 ```sh
 git tag -a v0.1.8 -m "Release v0.1.8"
 git push origin v0.1.8
 ```
 
-随后在 GitHub Actions 的 Release 工作流查看进度，完成后到 Releases 下载。工作流使用 GitHub 自动提供的 `GITHUB_TOKEN`，无需配置个人 token 或 GoReleaser Pro 密钥；仓库或组织应允许 Actions 使用工作流声明的 `contents: write` 权限。
-
-本地可以安装 GoReleaser 2.19.0，在至少有一次提交的 Git 仓库中验证和试打包：
-
-```sh
-make release-check
-make snapshot
-```
-
-`make snapshot` 会清理并重新生成 `dist/`，产物使用 snapshot 版本号，不会上传、发布，也不需要 GitHub token。普通 CI 校验发布配置；打 tag 时才执行全部架构的构建和发布。
-
-Linux 下载压缩包及校验和文件后可执行：
-
-```sh
-sha256sum --check --ignore-missing checksums.txt
-```
-
-压缩包仅包含本工具，不捆绑 Codex CLI。归档、恢复、删除仍需另行安装 Codex CLI。
+GoReleaser 会为 Linux、macOS 和 Windows 的 amd64、arm64 架构生成压缩包，并发布校验和。工作流使用 GitHub 自动提供的 `GITHUB_TOKEN`。

@@ -121,50 +121,11 @@ The module path is `github.com/sugoncloud/codex-session`. To install the executa
 
 ## Releases
 
-Pushing a version tag such as `v0.1.8` triggers `.github/workflows/release.yml`. The workflow runs formatting checks, tests, and vet before GoReleaser builds and uploads the release assets. It uses Go 1.26.x and GoReleaser 2.19.0.
-
-| Platform | Architectures | Archive |
-| --- | --- | --- |
-| Linux | amd64, arm64 | `.tar.gz` |
-| macOS (`darwin`) | amd64, arm64 | `.tar.gz` |
-| Windows | amd64, arm64 | `.zip` |
-
-Each archive contains the executable and both README files. Release assets also include `checksums.txt` with SHA-256 hashes and a changelog generated from Git history. Binary versions come from the tag, for example `v0.1.8` produces `codex-sess 0.1.8`. Prerelease tags such as `v0.2.0-rc.1` create GitHub prereleases.
-
-After committing and pushing the project, including the release workflow:
+Push a version tag to trigger `.github/workflows/release.yml`:
 
 ```sh
 git tag -a v0.1.8 -m "Release v0.1.8"
 git push origin v0.1.8
 ```
 
-Use a new version tag for each release. Follow the **Release** workflow in GitHub Actions, then download the matching asset from GitHub Releases. GitHub supplies `GITHUB_TOKEN`; the workflow requests `contents: write`, so no personal access token or GoReleaser Pro key is needed. Repository or organization settings must allow Actions to run with that permission.
-
-Example asset names:
-
-```text
-codex-sess_0.1.8_linux_amd64.tar.gz
-codex-sess_0.1.8_linux_arm64.tar.gz
-codex-sess_0.1.8_darwin_amd64.tar.gz
-codex-sess_0.1.8_darwin_arm64.tar.gz
-codex-sess_0.1.8_windows_amd64.zip
-codex-sess_0.1.8_windows_arm64.zip
-checksums.txt
-```
-
-To validate the configuration and build release archives locally, install [GoReleaser](https://goreleaser.com/install/) 2.19.0 and run from a Git checkout with at least one commit:
-
-```sh
-make release-check
-make snapshot
-```
-
-`make snapshot` writes to `dist/` and does **not** publish anything or require a GitHub token. It clears previous contents of `dist/`. Archives use a snapshot version rather than a final release version. Normal CI checks the GoReleaser configuration; the tag workflow performs all cross-platform builds.
-
-On Linux, after downloading the archives and checksum file, verify them with:
-
-```sh
-sha256sum --check --ignore-missing checksums.txt
-```
-
-The archives contain `codex-sess` (`codex-sess.exe` on Windows), not the Codex CLI. Install the Codex CLI separately to use archive, restore, or delete operations.
+GoReleaser publishes Linux, macOS, and Windows archives for amd64 and arm64. The workflow also publishes checksums and uses the repository's `GITHUB_TOKEN`.
