@@ -85,14 +85,3 @@ make build VERSION=0.1.8
 入口、命令行输出、TUI、显示辅助、会话模型、数据库访问和 Codex 命令调用分别位于 `main.go`、`cli.go`、`ui.go`、`display.go`、`session.go`、`store.go` 和 `runner.go`。GitHub Actions 使用 Go 1.26.x 执行格式检查、测试、静态检查和无 CGO 构建。
 
 模块路径为 `github.com/sugoncloud/codex-session`。如需安装名为 `codex-sess` 的可执行文件，请克隆仓库后执行 `make install`，或下载 Release 压缩包。模块名称与可执行文件名称有意不同。
-
-## Tag 自动发布
-
-推送版本 tag 会触发 `.github/workflows/release.yml`：
-
-```sh
-git tag -a v0.1.8 -m "Release v0.1.8"
-git push origin v0.1.8
-```
-
-GoReleaser 会为 Linux、macOS 和 Windows 的 amd64、arm64 架构生成压缩包，并发布校验和。工作流使用 GitHub 自动提供的 `GITHUB_TOKEN`。

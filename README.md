@@ -118,14 +118,3 @@ Tests use temporary databases, a fake Codex executable, and a simulated terminal
 | `runner.go` | Validated Codex CLI invocation |
 
 The module path is `github.com/sugoncloud/codex-session`. To install the executable with its `codex-sess` name, clone the repository and run `make install` (or download a release archive). The repository module name and the executable name are intentionally different.
-
-## Releases
-
-Push a version tag to trigger `.github/workflows/release.yml`:
-
-```sh
-git tag -a v0.1.8 -m "Release v0.1.8"
-git push origin v0.1.8
-```
-
-GoReleaser publishes Linux, macOS, and Windows archives for amd64 and arm64. The workflow also publishes checksums and uses the repository's `GITHUB_TOKEN`.
