@@ -1,0 +1,21 @@
+# Build and test output
+/bin/
+/dist/
+/codex-sess
+/codex-sess.exe
+*.test
+*.prof
+/coverage.out
+
+# Local editor and OS files
+.idea/
+.vscode/
+.DS_Store
+
+# Local credentials and session databases
+.env
+.env.*
+.codex/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
